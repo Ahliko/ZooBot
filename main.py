@@ -2,8 +2,9 @@ import discord
 from dotenv import load_dotenv
 import os
 
-TOKEN = os.getenv("TOKEN")
 load_dotenv(dotenv_path="config")
+TOKEN = os.getenv("TOKEN")
+
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -13,7 +14,8 @@ class MyClient(discord.Client):
         if message.channel.name == 'test-bot':
             print(f'Message from {message.author}: {message.content}')
             if message.author.id != self.user.id:
-                await message.channel.send(message.content)
+                if message.content.startswith("!hello"):
+                    await message.channel.send("Hello **" + message.author.name + "**")
 
 
 intents = discord.Intents.all()
