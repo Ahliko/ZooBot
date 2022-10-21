@@ -1,6 +1,9 @@
 import discord
+from dotenv import load_dotenv
+import os
 
-TOKEN = "MTAzMjk4Nzc2ODk5MDc0NDU3Ng.GEyMKg.u_bJtS2IqYZj-qmv-b_S156bNCBe8quR304WGY"
+TOKEN = os.getenv("TOKEN")
+load_dotenv(dotenv_path="config")
 
 class MyClient(discord.Client):
     async def on_ready(self):
