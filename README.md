@@ -17,6 +17,8 @@ Les roles existant sont a créer au fur et a mesure (commande !addRole [nom] [em
 
 Pour pouvoir lire le message décripté les autres utilisateurs doivent inscrire la clef (commande !useMessKey [nom])
 
+-> Facilité la communication de partie de code ?
+
 ## **Commandes**
 
     // Information
