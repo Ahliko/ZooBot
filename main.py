@@ -9,9 +9,10 @@ TOKEN = os.getenv("TOKEN")
 
 
 class MyClient(discord.Client):
-    #def __init__(self, intents):
-    #    self.ChID = 0
-    #    self.Role_Emote = {}                                                       Le dico est la mais dès que l'on decommente le code fonctionne plus a cause de la init
+    def __init__(self, intents):
+        super().__init__(intents=intents)
+        self.ChID = 0
+        self.Role_Emote = dict()
     async def on_ready(self):
         print(f'Logged on as {self.user}!')
     async def on_message(self, message):
