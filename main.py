@@ -42,8 +42,10 @@ async def everyone(ctx):
 
 @bot.command()
 async def ping(ctx, arg):
-    user = discord.utils.get(bot.server.members, name=arg, discriminator=6885)
-    await ctx.send(content=f"{user.mention}", allowed_mentions=discord.AllowedMentions.all())
+    for guild in bot.guilds:
+        for member in guild.members:
+            if member.name == arg:
+                await ctx.send(content=f"{member.mention}", allowed_mentions=discord.AllowedMentions.all())
 
 # Problème à résoudre
 #@bot.event
