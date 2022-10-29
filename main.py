@@ -11,6 +11,7 @@ ChID = 0
 Role_Emote = dict()
 
 channelsList = []
+membersList = []
 
 intents = discord.Intents.all()
 intents.message_content = True
