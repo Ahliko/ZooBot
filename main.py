@@ -1,44 +1,58 @@
 import discord
 from dotenv import load_dotenv
 import os
-
-import main
+from discord.ext import commands
+import time
 
 load_dotenv(dotenv_path="config")
 TOKEN = os.getenv("TOKEN")
 
+ChID = 0
+Role_Emote = dict()
 
-class MyClient(discord.Client):
-    def __init__(self, intents):
-        super().__init__(intents=intents)
-        self.ChID = 0
-        self.Role_Emote = dict()
-    async def on_ready(self):
-        print(f'Logged on as {self.user}!')
-    async def on_message(self, message):
-        if message.channel.name == 'test-bot':
-            print(f'Message from {message.author}: {message.content}')
-            if message.author.id != self.user.id:
-                if message.content.startswith("!hello"):
-                    await message.channel.send("Hello **" + message.author.name + "**")
-
-                if message.content.startswith("!createRole"):
-                    arg = message.content.split()
-                    #self.Role_Emote[arg[1]] = arg[2]                              Pour stocker il nous faudrait un dico
-                    await message.channel.send(f"{arg[1]} {arg[2]}")
-
-                if message.content.startswith("!removeRole"):
-                    await message.channel.send("[name]")
-
-    async def on_reaction_add(self, reaction, user):
-        if reaction.message.channel.name == 'test-bot':
-            if reaction == ":grin:":   # <- Marche pas
-                await reaction.message.channel.send("Une reaction a eu lieu : " + str(reaction))
-            if reaction.emoji == "👍":  # <- Marche
-                await reaction.message.channel.send("Une reaction a eu lieu : " + str(reaction))
+channelsList = []
 
 intents = discord.Intents.all()
 intents.message_content = True
+prefix = '!'
 
-client = MyClient(intents=intents)
-client.run(TOKEN)
+bot = commands.Bot(command_prefix=prefix, intents=intents)
+
+
+@bot.event
+async def on_ready():
+    print(f'Logged on as {bot.user}!')
+    for guild in bot.guilds:
+        for channel in guild.channels:
+            channelsList.append(channel.name)
+    if not "zoobot-channel" in channelsList:
+        await bot.get_channel(1033131367317393550).clone(name="zooBot-Channel")
+
+
+@bot.command()
+async def hollo(ctx, arg):  # !hello
+    if not arg:
+        await ctx.send("Précise un argument")
+    else:
+        await ctx.send(arg)
+
+@bot.command()
+async def everyone(ctx):
+    await ctx.send(content="@everyone", allowed_mentions=discord.AllowedMentions.all())
+
+@bot.command()
+async def ping(ctx, arg):
+    user = discord.utils.get(bot.server.members, name=arg, discriminator=6885)
+    await ctx.send(content=f"{user.mention}", allowed_mentions=discord.AllowedMentions.all())
+
+# Problème à résoudre
+#@bot.event
+#async def on_message(ctx):
+#    if ctx.channel.name == "test-bot":
+#        if ctx.author != bot.user:
+#            if 22 <= time.localtime().tm_hour <= 23:
+#                await ctx.channel.send(f"Je pense qu'il serait temps d'aller se coucher **{bot.ctx.author.name}**  :zzz:")
+#            if 23 < time.localtime().tm_hour < 7:
+#                await ctx.channel.send(f"Alors... y'en a qui dorme, alors s'te plaît **{ctx.author.name}** fais moins de bruit  :shushing_face:")
+
+bot.run(TOKEN)
