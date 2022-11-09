@@ -43,10 +43,13 @@ async def everyone(ctx):
 
 @bot.command()
 async def ping(ctx, arg):
+    await ctx.send(content=f"{to_ping(arg)}", allowed_mentions=discord.AllowedMentions.all())
+
+def to_ping(personne):
     for guild in bot.guilds:
         for member in guild.members:
-            if member.name == arg:
-                await ctx.send(content=f"{member.mention}", allowed_mentions=discord.AllowedMentions.all())
+            if member.name == personne:
+                return member.mention
 
 # Problème à résoudre
 #@bot.event
